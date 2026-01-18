@@ -10,11 +10,7 @@ class Author(models.Model):
 
 class Book(models.Model):
     title = models.CharField(max_length=200)
-    author = models.ForeignKey(
-        Author,
-        on_delete=models.CASCADE,
-        related_name='books'
-    )
+    author = models.ForeignKey(Author, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.title
@@ -22,10 +18,7 @@ class Book(models.Model):
 
 class Library(models.Model):
     name = models.CharField(max_length=150)
-    books = models.ManyToManyField(
-        Book,
-        related_name='libraries'
-    )
+    books = models.ManyToManyField(Book)
 
     def __str__(self):
         return self.name
@@ -33,25 +26,23 @@ class Library(models.Model):
 
 class Librarian(models.Model):
     name = models.CharField(max_length=100)
-    library = models.OneToOneField(
-        Library,
-        on_delete=models.CASCADE,
-        related_name='librarian'
-    )
+    library = models.OneToOneField(Library, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
-    
+
+
+# ---- Role-Based (Task 3) ----
 class UserProfile(models.Model):
     ROLE_CHOICES = [
         ('Admin', 'Admin'),
         ('Librarian', 'Librarian'),
         ('Member', 'Member'),
     ]
-
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='Member')
 
     def __str__(self):
-        return f"{self.user.username} - {self.role}"    
+        return f"{self.user.username} - {self.role}"
+  
 

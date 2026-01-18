@@ -4,71 +4,43 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth import login
 from django.contrib.auth.decorators import user_passes_test
-from django.http import HttpResponse
-
 
 from .models import Library
 from .models import Book
 
-
-# Function-based view: list all books
+# ---- Books ----
 def list_books(request):
     books = Book.objects.all()
     return render(request, 'relationship_app/list_books.html', {'books': books})
 
-
-# Class-based view: library details
 class LibraryDetailView(DetailView):
     model = Library
     template_name = 'relationship_app/library_detail.html'
     context_object_name = 'library'
 
-
-# Register view
+# ---- Authentication ----
 def register(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
         if form.is_valid():
-            form.save()
+            user = form.save()
             login(request, user)
             return redirect('login')
     else:
         form = UserCreationForm()
-
     return render(request, 'relationship_app/register.html', {'form': form})
 
-
-# Login view (Class-based)
-class CustomLoginView(LoginView):
-    template_name = 'relationship_app/login.html'
-
-
-# Logout view (Class-based)
-class CustomLogoutView(LogoutView):
-    template_name = 'relationship_app/logout.html'
-
-
-def is_admin(user):
-    return hasattr(user, 'userprofile') and user.userprofile.role == 'Admin'
-
-
-@user_passes_test(is_admin)
+# ---- Role-Based Views (Task 3) ----
+@user_passes_test(lambda user: hasattr(user, 'userprofile') and user.userprofile.role == 'Admin')
 def admin_view(request):
     return render(request, 'relationship_app/admin_view.html')
 
-def is_librarian(user):
-    return hasattr(user, 'userprofile') and user.userprofile.role == 'Librarian'
-
-
-@user_passes_test(is_librarian)
+@user_passes_test(lambda user: hasattr(user, 'userprofile') and user.userprofile.role == 'Librarian')
 def librarian_view(request):
     return render(request, 'relationship_app/librarian_view.html')
 
-def is_member(user):
-    return hasattr(user, 'userprofile') and user.userprofile.role == 'Member'
-
-
-@user_passes_test(is_member)
+@user_passes_test(lambda user: hasattr(user, 'userprofile') and user.userprofile.role == 'Member')
 def member_view(request):
     return render(request, 'relationship_app/member_view.html')
+
 
