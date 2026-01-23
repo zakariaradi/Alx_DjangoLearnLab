@@ -2,23 +2,16 @@ from django.shortcuts import render, redirect
 from django.views.generic.detail import DetailView
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
-from django.contrib.auth.decorators import user_passes_test
-
-from .models import Library
-from .models import Book
-from django.contrib.auth.decorators import permission_required
+from django.contrib.auth.decorators import user_passes_test, permission_required
 from django.http import HttpResponse
 
+from .models import Library, Book
 
 
-# ---------- IMPORTANT ----------
-# ALX checker looks for THIS NAME exactly: userpassestest
-def userpassestest(test_func):
-    return user_passes_test(test_func)
-# --------------------------------
+# =====================================================
+# Books Views
+# =====================================================
 
-
-# ---- Books ----
 def list_books(request):
     books = Book.objects.all()
     return render(request, 'relationship_app/list_books.html', {'books': books})
@@ -30,7 +23,10 @@ class LibraryDetailView(DetailView):
     context_object_name = 'library'
 
 
-# ---- Authentication ----
+# =====================================================
+# Authentication
+# =====================================================
+
 def register(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
@@ -44,21 +40,28 @@ def register(request):
     return render(request, 'relationship_app/register.html', {'form': form})
 
 
-# ---- Role-Based Views (checker-required syntax) ----
+# =====================================================
+# Role-Based Access Control (Task 3)
+# =====================================================
 
-@userpassestest(lambda user: user.userprofile.role == 'Admin')
+@user_passes_test(lambda user: user.userprofile.role == 'Admin')
 def admin_view(request):
     return render(request, 'relationship_app/admin_view.html')
 
 
-@userpassestest(lambda user: user.userprofile.role == 'Librarian')
+@user_passes_test(lambda user: user.userprofile.role == 'Librarian')
 def librarian_view(request):
     return render(request, 'relationship_app/librarian_view.html')
 
 
-@userpassestest(lambda user: user.userprofile.role == 'Member')
+@user_passes_test(lambda user: user.userprofile.role == 'Member')
 def member_view(request):
     return render(request, 'relationship_app/member_view.html')
+
+
+# =====================================================
+# Custom Permissions (Task 4)
+# =====================================================
 
 @permission_required('relationship_app.can_add_book')
 def add_book(request):
@@ -73,6 +76,7 @@ def edit_book(request, book_id):
 @permission_required('relationship_app.can_delete_book')
 def delete_book(request, book_id):
     return HttpResponse("Delete Book - Permission Granted")
+
 
 
 
