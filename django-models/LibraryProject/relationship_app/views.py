@@ -6,6 +6,9 @@ from django.contrib.auth.decorators import user_passes_test
 
 from .models import Library
 from .models import Book
+from django.contrib.auth.decorators import permission_required
+from django.http import HttpResponse
+
 
 
 # ---------- IMPORTANT ----------
@@ -56,6 +59,20 @@ def librarian_view(request):
 @userpassestest(lambda user: user.userprofile.role == 'Member')
 def member_view(request):
     return render(request, 'relationship_app/member_view.html')
+
+@permission_required('relationship_app.can_add_book')
+def add_book(request):
+    return HttpResponse("Add Book - Permission Granted")
+
+
+@permission_required('relationship_app.can_change_book')
+def edit_book(request, book_id):
+    return HttpResponse("Edit Book - Permission Granted")
+
+
+@permission_required('relationship_app.can_delete_book')
+def delete_book(request, book_id):
+    return HttpResponse("Delete Book - Permission Granted")
 
 
 
