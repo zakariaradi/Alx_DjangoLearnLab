@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.views.generic.detail import DetailView
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
-from django.contrib.auth.decorators import user_passes_test as userpassestest
+from django.contrib.auth.decorators import user_passes_test
 
 from .models import Library
 from .models import Book
@@ -30,25 +30,24 @@ def register(request):
             return redirect('login')
     else:
         form = UserCreationForm()
-
     return render(request, 'relationship_app/register.html', {'form': form})
 
 
-# ---- Role-Based Views (Task 3) ----
-
-@userpassestest(lambda user: user.userprofile.role == 'Admin')
+# ---- Role-Based Views (NO helpers, NO hasattr) ----
+@user_passes_test(lambda user: user.userprofile.role == 'Admin')
 def admin_view(request):
     return render(request, 'relationship_app/admin_view.html')
 
 
-@userpassestest(lambda user: user.userprofile.role == 'Librarian')
+@user_passes_test(lambda user: user.userprofile.role == 'Librarian')
 def librarian_view(request):
     return render(request, 'relationship_app/librarian_view.html')
 
 
-@userpassestest(lambda user: user.userprofile.role == 'Member')
+@user_passes_test(lambda user: user.userprofile.role == 'Member')
 def member_view(request):
     return render(request, 'relationship_app/member_view.html')
+
 
 
 
