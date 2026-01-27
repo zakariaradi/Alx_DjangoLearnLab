@@ -1,46 +1,25 @@
-from django.urls import path
-from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin
 from django.conf import settings
-from django.conf.urls.static import static
+from django.contrib.auth import get_user_model
+
+CustomUser = get_user_model()
 
 
+class CustomUserAdmin(UserAdmin):
+    model = CustomUser
 
-from .views import (
-    list_books,
-    LibraryDetailView,
-    register,
-    admin_view,
-    librarian_view,
-    member_view,
-    add_book,
-    edit_book,
-    delete_book,
-)
+    fieldsets = UserAdmin.fieldsets + (
+        ('Additional Info', {
+            'fields': ('date_of_birth', 'profile_photo'),
+        }),
+    )
 
-
-urlpatterns = [
-    
-    # Books
-    path('books/', list_books, name='list_books'),
-    path('libraries/<int:pk>/', LibraryDetailView.as_view(), name='library_detail'),
-
-    # Authentication
-    path('register/', register, name='register'),
-    path('login/', LoginView.as_view(template_name='relationship_app/login.html'), name='login'),
-    path('logout/', LogoutView.as_view(template_name='relationship_app/logout.html'), name='logout'),
-
-    # Role-Based Access (Task 3)
-    path('admin/', admin_view, name='admin_view'),
-    path('librarian/', librarian_view, name='librarian_view'),
-    path('member/', member_view, name='member_view'),
-
-    # Custom Permissions (Task 4)
-    path('add_book/', add_book, name='add_book'),
-    path('edit_book/<int:book_id>/', edit_book, name='edit_book'),
-    path('delete_book/<int:book_id>/', delete_book, name='delete_book'),
-
-]
-
-]
+    add_fieldsets = UserAdmin.add_fieldsets + (
+        ('Additional Info', {
+            'fields': ('date_of_birth', 'profile_photo'),
+        }),
+    )
 
 
+admin.site.register(CustomUser, CustomUserAdmin)
