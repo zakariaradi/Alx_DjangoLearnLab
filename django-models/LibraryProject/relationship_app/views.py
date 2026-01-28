@@ -2,10 +2,12 @@ from django.shortcuts import render, redirect
 from django.views.generic.detail import DetailView
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
-from django.contrib.auth.decorators import user_passes_test, permission_required
 from django.http import HttpResponse
 
 from .models import Library, Book
+from django.contrib.auth.decorators import user_passes_test
+from django.shortcuts import render
+
 
 
 # =====================================================
@@ -76,6 +78,21 @@ def edit_book(request, book_id):
 @permission_required('relationship_app.can_delete_book')
 def delete_book(request, book_id):
     return HttpResponse("Delete Book - Permission Granted")
+
+
+@user_passes_test(lambda user: user.userprofile.role == 'Admin')
+def admin_view(request):
+    return render(request, 'relationship_app/admin_view.html')
+
+
+@user_passes_test(lambda user: user.userprofile.role == 'Librarian')
+def librarian_view(request):
+    return render(request, 'relationship_app/librarian_view.html')
+
+
+@user_passes_test(lambda user: user.userprofile.role == 'Member')
+def member_view(request):
+    return render(request, 'relationship_app/member_view.html')
 
 
 
