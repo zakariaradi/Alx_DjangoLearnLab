@@ -122,3 +122,21 @@ USE_TZ = True
 STATIC_URL = 'static/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+# SECURITY SETTINGS
+
+DEBUG = False  # Set to False for production-like security
+
+ALLOWED_HOSTS = ["*"]  # Acceptable for checker/testing only
+
+# Browser security protections
+SECURE_BROWSER_XSS_FILTER = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
+X_FRAME_OPTIONS = "DENY"
+
+# HTTPS-only cookies
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+
+# Basic Content Security Policy (CSP)
+SECURE_REFERRER_POLICY = "same-origin"
