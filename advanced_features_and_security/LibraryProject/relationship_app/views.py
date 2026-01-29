@@ -6,6 +6,8 @@ from django.contrib.auth.forms import UserCreationForm
 from .models import Book, Library
 
 
+@login_required
+@permission_required("relationship_app.can_view", raise_exception=True)
 def list_books(request):
     books = Book.objects.all()
     return render(request, "relationship_app/book_list.html", {"books": books})
@@ -42,25 +44,22 @@ def member_view(request):
     return render(request, "relationship_app/member.html")
 
 
-@permission_required("relationship_app.can_add_book", raise_exception=True)
+@login_required
+@permission_required("relationship_app.can_create", raise_exception=True)
 def add_book(request):
     return render(request, "relationship_app/add_book.html")
 
 
-@permission_required("relationship_app.can_edit_book", raise_exception=True)
+@login_required
+@permission_required("relationship_app.can_edit", raise_exception=True)
 def edit_book(request, book_id):
     book = get_object_or_404(Book, id=book_id)
     return render(request, "relationship_app/edit_book.html", {"book": book})
 
 
-@permission_required("relationship_app.can_delete_book", raise_exception=True)
+@login_required
+@permission_required("relationship_app.can_delete", raise_exception=True)
 def delete_book(request, book_id):
     book = get_object_or_404(Book, id=book_id)
     book.delete()
     return redirect("list_books")
-
-
-
-
-
-
