@@ -31,8 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    "accounts",
-    "relationship_app",
+    "bookshelf",
 
     "django.contrib.admin",
     "django.contrib.auth",
@@ -41,6 +40,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
 ]
+
 AUTH_USER_MODEL = "accounts.CustomUser"
 
 
