@@ -1,9 +1,11 @@
-from django.contrib import admin
-from django.urls import path, include
+from rest_framework.generics import ListAPIView
+from .models import Book
+from .serializers import BookSerializer
 
-urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('api/', include('api.urls')),
-]
+
+class BookList(ListAPIView):
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
+
 
 
