@@ -22,3 +22,30 @@ This project uses Django REST Framework generic views to manage Book resources.
 ### Permissions
 - Read-only endpoints are publicly accessible.
 - Create, update, and delete operations require authentication.
+
+## Filtering, Searching, and Ordering
+
+The Book list endpoint supports advanced query features using Django REST Framework.
+
+### Filtering
+Filter books by:
+- title
+- publication_year
+- author
+
+Example:
+GET /api/books/?publication_year=2022
+
+### Searching
+Search across book title and author name.
+
+Example:
+GET /api/books/?search=django
+
+### Ordering
+Order results by:
+- title
+- publication_year
+
+Example:
+GET /api/books/?ordering=-publication_year
