@@ -1,57 +1,50 @@
-from rest_framework import generics, permissions
+from rest_framework import generics
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from .models import Book
 from .serializers import BookSerializer
 
 
 class BookListView(generics.ListAPIView):
     """
-    ListView:
-    - Retrieves all Book instances.
-    - доступ (read-only) for both authenticated and unauthenticated users.
+    List all books (read-only for everyone).
     """
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
 
 class BookDetailView(generics.RetrieveAPIView):
     """
-    DetailView:
-    - Retrieves a single Book by ID (pk).
-    - Accessible to all users (read-only).
+    Retrieve a single book (read-only for everyone).
     """
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
 
 class BookCreateView(generics.CreateAPIView):
     """
-    CreateView:
-    - Allows authenticated users to create a new Book.
-    - Includes serializer validation (e.g. publication_year).
+    Create a new book (authenticated users only).
     """
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
 
 class BookUpdateView(generics.UpdateAPIView):
     """
-    UpdateView:
-    - Allows authenticated users to update an existing Book.
-    - Uses PUT/PATCH methods.
+    Update an existing book (authenticated users only).
     """
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
 
 class BookDeleteView(generics.DestroyAPIView):
     """
-    DeleteView:
-    - Allows authenticated users to delete a Book.
+    Delete a book (authenticated users only).
     """
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAuthenticated]
+
