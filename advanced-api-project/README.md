@@ -49,3 +49,17 @@ Order results by:
 
 Example:
 GET /api/books/?ordering=-publication_year
+
+## Testing
+
+This project uses Django REST Framework's APITestCase to validate API behavior.
+
+### What is tested:
+- CRUD operations for Book endpoints
+- Authentication and permission enforcement
+- Filtering by publication_year
+- Searching by title
+- Ordering by publication_year
+
+### Running tests:
+python manage.py test api
