@@ -2,12 +2,25 @@
 {% block content %}
 
 <h2>{{ object.title }}</h2>
+
 <p>{{ object.content }}</p>
+
 <p><strong>Author:</strong> {{ object.author }}</p>
 <p><strong>Date:</strong> {{ object.published_date }}</p>
 
+<p><strong>Tags:</strong>
+{% for tag in object.tags.all %}
+    <a href="{% url 'tag-posts' tag.name %}">
+        {{ tag.name }}
+    </a>
+{% empty %}
+    No tags
+{% endfor %}
+</p>
+
 {% if user == object.author %}
     <a href="{% url 'post-update' object.pk %}">Edit</a>
+    |
     <a href="{% url 'post-delete' object.pk %}">Delete</a>
 {% endif %}
 
@@ -37,7 +50,9 @@
 {% if user.is_authenticated %}
     <a href="{% url 'comment-add' object.pk %}">Add Comment</a>
 {% else %}
-    <p><a href="{% url 'login' %}">Login</a> to add a comment.</p>
+    <p>
+        <a href="{% url 'login' %}">Login</a> to add a comment.
+    </p>
 {% endif %}
 
 {% endblock %}

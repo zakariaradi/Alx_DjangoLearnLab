@@ -18,10 +18,15 @@ urlpatterns = [
     path('post/<int:pk>/update/', views.PostUpdateView.as_view(), name='post-update'),
     path('post/<int:pk>/delete/', views.PostDeleteView.as_view(), name='post-delete'),
     path('posts/', views.PostListView.as_view(), name='post-list'),
-    
-    # Comments
-    path('post/<int:pk>/comments/new/', views.add_comment, name='comment-add'),
-    path('comment/<int:pk>/update/', views.update_comment, name='comment-update'),
-    path('comment/<int:pk>/delete/', views.delete_comment, name='comment-delete'),
+
+    # Comment CRUD (Class-Based)
+    path('post/<int:pk>/comments/new/', views.CommentCreateView.as_view(), name='comment-add'),
+    path('comment/<int:pk>/update/', views.CommentUpdateView.as_view(), name='comment-update'),
+    path('comment/<int:pk>/delete/', views.CommentDeleteView.as_view(), name='comment-delete'),
+
+    # Tagging & Search
+    path('tags/<str:tag_name>/', views.TagPostListView.as_view(), name='tag-posts'),
+    path('search/', views.SearchResultsView.as_view(), name='search'),
 ]
+
 
