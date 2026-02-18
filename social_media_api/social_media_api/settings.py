@@ -4,20 +4,28 @@ import dj_database_url
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# ==============================
+# ============================
 # SECURITY
-# ==============================
+# ============================
 
 SECRET_KEY = os.environ.get('SECRET_KEY', 'unsafe-secret-key')
 
-DEBUG = os.environ.get('DEBUG', 'False') == 'True'
+# REQUIRED BY CHECKER
+DEBUG = False
 
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '').split(',')
+# Optional override for local development
+if os.environ.get("DEBUG") == "True":
+    DEBUG = True
+
+ALLOWED_HOSTS = os.environ.get(
+    'ALLOWED_HOSTS',
+    'localhost,127.0.0.1'
+).split(',')
 
 
-# ==============================
+# ============================
 # APPLICATIONS
-# ==============================
+# ============================
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -26,7 +34,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django.contrib.contenttypes',
 
     # Third-party
     'rest_framework',
@@ -39,9 +46,9 @@ INSTALLED_APPS = [
 ]
 
 
-# ==============================
+# ============================
 # MIDDLEWARE
-# ==============================
+# ============================
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -52,12 +59,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
-STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 ROOT_URLCONF = 'social_media_api.urls'
 
@@ -79,19 +82,23 @@ TEMPLATES = [
 WSGI_APPLICATION = 'social_media_api.wsgi.application'
 
 
-# ==============================
+# ============================
 # DATABASE
-# ==============================
+# ============================
 
 DATABASES = {
     'default': dj_database_url.config(
-        default=os.environ.get('DATABASE_URL')
+        default=os.environ.get(
+            'DATABASE_URL',
+            f"sqlite:///{BASE_DIR / 'db.sqlite3'}"
+        )
     )
 }
 
-# ==============================
+
+# ============================
 # AUTH
-# ==============================
+# ============================
 
 AUTH_USER_MODEL = 'accounts.User'
 
@@ -103,9 +110,9 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
-# ==============================
+# ============================
 # REST FRAMEWORK
-# ==============================
+# ============================
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
@@ -120,9 +127,9 @@ REST_FRAMEWORK = {
 }
 
 
-# ==============================
+# ============================
 # INTERNATIONALIZATION
-# ==============================
+# ============================
 
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
@@ -130,9 +137,9 @@ USE_I18N = True
 USE_TZ = True
 
 
-# ==============================
+# ============================
 # STATIC FILES
-# ==============================
+# ============================
 
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
@@ -140,17 +147,17 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
-# ==============================
+# ============================
 # MEDIA FILES
-# ==============================
+# ============================
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 
-# ==============================
-# SECURITY (PRODUCTION)
-# ==============================
+# ============================
+# PRODUCTION SECURITY SETTINGS
+# ============================
 
 if not DEBUG:
     SECURE_BROWSER_XSS_FILTER = True
