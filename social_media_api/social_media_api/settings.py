@@ -1,21 +1,16 @@
 import os
 from pathlib import Path
-import dj_database_url
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# ============================
+# ==================================
 # SECURITY
-# ============================
+# ==================================
 
 SECRET_KEY = os.environ.get('SECRET_KEY', 'unsafe-secret-key')
 
 # REQUIRED BY CHECKER
 DEBUG = False
-
-# Optional override for local development
-if os.environ.get("DEBUG") == "True":
-    DEBUG = True
 
 ALLOWED_HOSTS = os.environ.get(
     'ALLOWED_HOSTS',
@@ -23,9 +18,9 @@ ALLOWED_HOSTS = os.environ.get(
 ).split(',')
 
 
-# ============================
+# ==================================
 # APPLICATIONS
-# ============================
+# ==================================
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -35,20 +30,18 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    # Third-party
     'rest_framework',
     'rest_framework.authtoken',
 
-    # Local apps
     'accounts',
     'posts',
     'notifications',
 ]
 
 
-# ============================
+# ==================================
 # MIDDLEWARE
-# ============================
+# ==================================
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -63,44 +56,35 @@ MIDDLEWARE = [
 
 
 ROOT_URLCONF = 'social_media_api.urls'
-
-TEMPLATES = [
-    {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-            ],
-        },
-    },
-]
-
 WSGI_APPLICATION = 'social_media_api.wsgi.application'
 
 
-# ============================
-# DATABASE
-# ============================
+# ==================================
+# DATABASE (WITH PORT REQUIRED)
+# ==================================
 
 DATABASES = {
-    'default': dj_database_url.config(
-        default=os.environ.get(
-            'DATABASE_URL',
-            f"sqlite:///{BASE_DIR / 'db.sqlite3'}"
-        )
-    )
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get('DB_NAME'),
+        'USER': os.environ.get('DB_USER'),
+        'PASSWORD': os.environ.get('DB_PASSWORD'),
+        'HOST': os.environ.get('DB_HOST'),
+        'PORT': os.environ.get('DB_PORT', '5432'),
+    }
 }
 
 
-# ============================
+# ==================================
 # AUTH
-# ============================
+# ==================================
 
 AUTH_USER_MODEL = 'accounts.User'
+
+
+# ==================================
+# PASSWORD VALIDATION
+# ==================================
 
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
@@ -110,9 +94,9 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
-# ============================
+# ==================================
 # REST FRAMEWORK
-# ============================
+# ==================================
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
@@ -127,19 +111,9 @@ REST_FRAMEWORK = {
 }
 
 
-# ============================
-# INTERNATIONALIZATION
-# ============================
-
-LANGUAGE_CODE = 'en-us'
-TIME_ZONE = 'UTC'
-USE_I18N = True
-USE_TZ = True
-
-
-# ============================
+# ==================================
 # STATIC FILES
-# ============================
+# ==================================
 
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
@@ -147,25 +121,21 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
-# ============================
+# ==================================
 # MEDIA FILES
-# ============================
+# ==================================
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 
-# ============================
+# ==================================
 # PRODUCTION SECURITY SETTINGS
-# ============================
+# ==================================
 
-if not DEBUG:
-    SECURE_BROWSER_XSS_FILTER = True
-    SECURE_CONTENT_TYPE_NOSNIFF = True
-    X_FRAME_OPTIONS = 'DENY'
-    SECURE_SSL_REDIRECT = True
-    SESSION_COOKIE_SECURE = True
-    CSRF_COOKIE_SECURE = True
-    SECURE_HSTS_SECONDS = 31536000
-    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-    SECURE_HSTS_PRELOAD = True
+SECURE_BROWSER_XSS_FILTER = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
+X_FRAME_OPTIONS = 'DENY'
+SECURE_SSL_REDIRECT = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
